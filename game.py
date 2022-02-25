@@ -19,7 +19,6 @@ def loadImage(dir, filename, alpha=0):
             image.convert_alpha()
         else:
             image.convert()
-            #image.set_colorkey(image.get_at((0,0)))
         return image
     except:
         print("couldn't load image" + filename)
@@ -138,7 +137,7 @@ class SpashScreen(State):
     def __init__(self, game):
         State.__init__(self, game)
         self.countdown = 75
-        self.spashtext1 = self.game.large_font.render("A CheezeSoft Game", True, (255, 255, 255))
+        self.spashtext1 = self.game.large_font.render("Hollow Knight", True, (255, 255, 255))
         self.spashtext1rect = self.spashtext1.get_rect(
             center=(self.game.screen_width / 2, self.game.screen_height / self.countdown + 100))
         self.sound = loadSound(os.path.join("data", "sounds"), "depressurize.wav")
@@ -214,8 +213,8 @@ class StartScreen(State):
         self.grassshadow = loadImage(os.path.join("data","images"),"grasshadow.png" ,1)
         self.starttext = self.game.small_font.render("press Start", True, (255,255,255))
         self.starttextrect = self.starttext.get_rect(center=(self.game.screen_width / 2, self.game.screen_height / 2 - 30))
-        self.titletext = self.game.large_font.render("Moes Adventure", True, (255, 255, 255))
-        self.titletext2 = self.game.large_font.render("Moes Adventure", True, (25, 25, 25))
+        self.titletext = self.game.large_font.render("Hollow knight", True, (255, 255, 255))
+        self.titletext2 = self.game.large_font.render("Hollow knight", True, (25, 25, 25))
         self.titletextrect = self.titletext.get_rect(center=(self.game.screen_width / 2, self.game.screen_height / 4))
         self.musicstart = False
 
@@ -1431,9 +1430,6 @@ class Platformer(State):
             self.camera.draw_sprite(self.tempsurf, i)
         for i in self.collidables.sprites():
             self.camera.draw_sprite(self.tempsurf, i)
-            # it = i.rect.copy()
-            # it.topleft = utilities.add_pos(i.rect.topleft,self.camera.offset)
-            # pygame.draw.rect(self.tempsurf,(90,90,90),it,1)
 
         self.camera.draw_sprite(self.tempsurf, self.player)
         self.hud.render(self.tempsurf)
@@ -1605,7 +1601,7 @@ class Platformer(State):
 class Victory(State):
     def __init__(self, game):
         State.__init__(self, game)
-        self.credits = ["programming ,art, and music by Chris Eldridge",
+        self.credits = ["programming ,art, and music by Artyom Sukhomlin, T",
                         "sound effect from Juhani Junkala 512 sound effect on opengameart.org",
                         "special thanks to the pygame community",
                         "thanks for playing"]
@@ -1712,7 +1708,6 @@ class death(State):
 
 class game():
     def __init__(self):
-        #sets up pygame
         os.environ["SDL_VIDEO_CENTERED"] = "1"
         pygame.init()
 
@@ -1721,17 +1716,14 @@ class game():
         self.screen = pygame.display.set_mode((self.screen_width,self.screen_height),pygame.RESIZABLE|pygame.SCALED)
         pygame.display.set_icon(loadImage(os.path.join("data", "images"), "icon.png"))
 
-        #load font
         self.font_path = os.path.join("data", "fonts", "Cave-Story.ttf")
         self.large_font = pygame.font.Font(self.font_path, 75)
         self.small_font = pygame.font.Font(self.font_path, 30)
         self.tiny_font = pygame.font.Font(self.font_path, 15)
 
-        #sets up current states
         self.curr_state = "game"
         self.prev_state = "game"
 
-        #sets up controls
         pygame.joystick.init()
         self.joystick = None
         try:
@@ -1741,12 +1733,10 @@ class game():
         self.actions = {"a":False,"b":False,"up": False,"down":False,"left":False,"right":False,"start":False, "select":False}
         self.action_mapping = { "a":pygame.K_a,"b":pygame.K_s,"up":pygame.K_UP, "down":pygame.K_DOWN, "left":pygame.K_LEFT,"right":pygame.K_RIGHT,"start":pygame.K_RETURN,"select":pygame.K_RIGHTBRACKET}
 
-        #sets up clock and other time related
         self.clock = pygame.time.Clock()
         self.delta_time = 0
         self.target_fps = 60
 
-        #game loop varibales
         self.running = False
 
         # game states
@@ -1762,7 +1752,6 @@ class game():
         self.victory = Victory(self)
 
     def update_actions(self):
-        #смотрит какие клавиши нажаты
         keys = pygame.key.get_pressed()
         for k in self.actions:
             self.actions[k] = False
@@ -1776,7 +1765,6 @@ class game():
 
 
     def update(self):
-        #print(self.clock.get_fps())
         self.delta_time = (self.clock.tick(self.target_fps) * .001 * self.target_fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
